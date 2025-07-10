@@ -1,6 +1,7 @@
 ﻿using System;
 
-//TODO: Можно вынести валидацию строк и чисел
+//TODO: Вынести валидацию строк и чисел.
+//TODO: Использовать встроенные классы или методы для создания исключений.
 
 class OrderManager
 {
@@ -13,14 +14,10 @@ class OrderManager
         {
             Console.Write("Enter product name: ");
             productName = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(productName))
-            {
+            if ( productName == "" )
                 Console.WriteLine($"Please enter a valid product name. You entered \"{productName}\".\n");
-            }
             else
-            {
                 isValid = true;
-            }
         }
         return productName;
     }
@@ -37,13 +34,9 @@ class OrderManager
                 Console.Write($"Enter how much \"{productName}\" you need: ");
                 productAmount = Convert.ToUInt32(Console.ReadLine());
                 if (productAmount > 0)
-                {
                     isValid = true;
-                }
                 else
-                {
                     Console.WriteLine("Please enter an amount greater than 0.\n");
-                }
             }
             catch
             {
@@ -63,13 +56,9 @@ class OrderManager
             Console.Write("Enter user name: ");
             userName = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(userName))
-            {
                 Console.WriteLine($"Please enter a valid user name. You entered \"{userName}\".\n");
-            }
             else
-            {
                 isValid = true;
-            }
         }
         return userName;
     }
@@ -84,13 +73,9 @@ class OrderManager
             Console.Write("Enter the delivery address: ");
             deliveryAddress = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(deliveryAddress))
-            {
                 Console.WriteLine($"Please enter a valid delivery address. You entered \"{deliveryAddress}\".\n");
-            }
             else
-            {
                 isValid = true;
-            }
         }
         return deliveryAddress;
     }
