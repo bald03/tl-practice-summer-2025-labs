@@ -1,127 +1,148 @@
-﻿using System;
+﻿using OrderManager;
 
-//TODO: Вынести валидацию строк и чисел.
-//TODO: Использовать встроенные классы или методы для создания исключений.
-
-class OrderManager
+static string ValidateStringInput(string prompt, string fieldName)
 {
-    static string GetProductName()
+    while (true)
     {
-        string productName = "";
-        bool isValid = false;
-
+        Console.Write(prompt);
+        string input = Console.ReadLine();
+        if (input == null || input == "" || input == " ")
         {
-            Console.Write( "Enter product name: " );
-            productName = Console.ReadLine();
-            if ( productName == "" )
-                Console.WriteLine( $"Please enter a valid product name. You entered \"{productName}\".\n" );
-            else
-                isValid = true;
+            Console.WriteLine($"Please enter a valid {fieldName}. You entered \"{input}\".\n");
         }
-        return productName;
-    }
-
-    static uint GetProductAmount( string productName )
-    {
-        uint productAmount = 0;
-        bool isValid = false;
-
-        while ( !isValid )
+        else
         {
-            try
-            {
-                Console.Write( $"Enter how much \"{productName}\" you need: " );
-                productAmount = Convert.ToUInt32( Console.ReadLine() );
-                if ( productAmount > 0 )
-                    isValid = true;
-                else
-                    Console.WriteLine( "Please enter an amount greater than 0.\n" );
-            }
-            catch
-            {
-                Console.WriteLine( "Invalid number entered. Please try again.\n" );
-            }
+            return input;
         }
-
-        return productAmount;
     }
+}
 
-    static string GetUserName()
+static uint ValidatePositiveNumberInput(string prompt)
+{
+    while (true)
     {
-        string userName = "";
-        bool isValid = false;
-
-        while ( !isValid )
+        Console.Write(prompt);
+        string input = Console.ReadLine();
+        if (uint.TryParse(input, out uint number) && number > 0)
         {
-            Console.Write( "Enter user name: " );
-            userName = Console.ReadLine();
-            if ( string.IsNullOrWhiteSpace( userName ) )
-                Console.WriteLine( $"Please enter a valid user name. You entered \"{userName}\".\n" );
-            else
-                isValid = true;
+            return number;
         }
+        Console.WriteLine("Please enter a valid positive number.\n");
+    }
+}
 
-        return userName;
+static void PrintMenu()
+{
+    Console.WriteLine("Welcome to Order manager!");
+    Console.WriteLine("Menu:");
+    Console.WriteLine("1. Place an order.");
+    Console.WriteLine("2. Exit.");
+}
+
+static Operation? ReadOperation()
+{
+    Console.Write("Enter operation: ");
+    string operationStr = Console.ReadLine();
+    
+    if (!Enum.TryParse(operationStr, out Operation operation) || 
+        !Enum.IsDefined(typeof(Operation), operation))
+    {
+        return null;
+    }
+    
+    return operation;
+}
+
+while (true)
+{
+    PrintMenu();
+    Operation? operation = ReadOperation();
+
+    if (operation == null)
+    {
+        Console.WriteLine("Invalid input. Please try again.\n");
+        continue;
     }
 
-    static string
-        GetDeliveryAddress() //TODO: Можно проводить более подробный опрос адремса у пользователя (страна, город, улица, дом, корпус, квартира)
+    if (operation == Operation.Exit)
     {
-        string deliveryAddress = "";
-        bool isValid = false;
-
-        while ( !isValid )
-        {
-            Console.Write( "Enter the delivery address: " );
-            deliveryAddress = Console.ReadLine();
-            if ( string.IsNullOrWhiteSpace( deliveryAddress ) )
-                Console.WriteLine( $"Please enter a valid delivery address. You entered \"{deliveryAddress}\".\n" );
-            else
-                isValid = true;
-        }
-
-        return deliveryAddress;
+        Console.WriteLine("Goodbye!");
+        break;
     }
 
-    static bool IsCorrectOrder( string productName, uint productAmount, string userName, string deliveryAddress )
+    HandleOperation(operation.Value);
+}
+
+static string GetProductName()
+{
+    return ValidateStringInput("Enter product name: ", "product name");
+}
+
+static uint GetProductAmount(string productName)
+{
+    return ValidatePositiveNumberInput($"Enter how much \"{productName}\" you need: ");
+}
+
+static string GetUserName()
+{
+    return ValidateStringInput("Enter user name: ", "user name");
+}
+
+static string GetDeliveryAddress()
+{
+    return ValidateStringInput("Enter the delivery address: ", "delivery address");
+}
+
+static bool IsCorrectOrder(string productName, uint productAmount, string userName, string deliveryAddress)
+{
+    Console.WriteLine($"\nHi, {userName}! You ordered {productAmount} unit(s) of \"{productName}\" for delivery to {deliveryAddress}.");
+    Console.Write("Is it correct? (Enter y/n): ");
+    string flag = Console.ReadLine();
+    return flag == "y" || flag == "Y";
+}
+
+static DateTime GetDeliveryDate()
+{
+    const int deliveryDays = 3;
+    return DateTime.Today.AddDays(deliveryDays);
+}
+
+static void WriteOrder(string productName, uint productAmount, string userName, string deliveryAddress, DateTime deliveryDate)
+{
+    Console.WriteLine($"\n{userName}, your order for {productAmount} unit(s) of \"{productName}\" has been placed!");
+    Console.WriteLine($"Expect delivery to: {deliveryAddress} by {deliveryDate:dd.MM.yyyy}");
+    Console.WriteLine();
+}
+
+static void StartPlaceAnOrder()
+{
+    Console.WriteLine();
+    string productName = GetProductName();
+    uint productAmount = GetProductAmount(productName);
+    string userName = GetUserName();
+    string deliveryAddress = GetDeliveryAddress();
+
+    if (IsCorrectOrder(productName, productAmount, userName, deliveryAddress))
     {
-        Console.WriteLine(
-            $"\nHi, {userName}! You ordered {productAmount} unit(s) of \"{productName}\" for delivery to {deliveryAddress}." );
-        Console.Write( "Is it correct? (Enter y/n): " );
-        char flag = Console.ReadKey().KeyChar;
-        Console.WriteLine();
-        return flag == 'y' || flag == 'Y';
+        DateTime deliveryDate = GetDeliveryDate();
+        WriteOrder(productName, productAmount, userName, deliveryAddress, deliveryDate);
     }
-
-    static DateTime GetDeliveryDate()
+    else
     {
-        const int deliveryDays = 3;
-        return DateTime.Today.AddDays( deliveryDays );
+        Console.WriteLine("\nOrder canceled. Returning to the main menu.\n");
     }
+}
 
-    static void WriteOrder( string productName, uint productAmount, string userName, string deliveryAddress,
-        DateTime deliveryDate )
+static void HandleOperation(Operation operation)
+{
+    switch (operation)
     {
-        Console.WriteLine( $"\n{userName}, your order for {productAmount} unit(s) of \"{productName}\" has been placed!" );
-        Console.WriteLine( $"Expect delivery to: {deliveryAddress} by {deliveryDate:dd.MM.yyyy}" );
-    }
-
-    static void Main()
-    {
-        string productName, userName, deliveryAddress;
-        uint productAmount;
-        DateTime deliveryDate;
-
-        do
-        {
-            Console.WriteLine();
-            productName = GetProductName();
-            productAmount = GetProductAmount( productName );
-            userName = GetUserName();
-            deliveryAddress = GetDeliveryAddress();
-        } while ( !IsCorrectOrder( productName, productAmount, userName, deliveryAddress ) );
-
-        deliveryDate = GetDeliveryDate();
-        WriteOrder( productName, productAmount, userName, deliveryAddress, deliveryDate );
+        case Operation.PlaceAnOrder:
+            StartPlaceAnOrder();
+            break;
+        case Operation.Exit:
+            break;
+        default:
+            throw new Exception($"Invalid operation. Entered: {operation}.");
     }
 }
