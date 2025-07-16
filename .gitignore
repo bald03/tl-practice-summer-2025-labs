@@ -1,17 +1,11 @@
-# Игнорировать временные файлы сборки и NuGet
-**/[Bb]in/
-**/[Oo]bj/
-**/.vs/
-**/*.user
-**/*.suo
-**/packages/
-*.nupkg
-
-# Игнорировать файлы конфигурации Rider/IDEA
+# JetBrains
 .idea/
-*.iml
-*.swp
 
-# Прочие системные/IDE файлы
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+
+# macOS
 .DS_Store
-*.log
