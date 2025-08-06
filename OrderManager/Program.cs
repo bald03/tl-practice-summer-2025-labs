@@ -1,6 +1,8 @@
 ﻿using OrderManager;
 
-const int deliveryDays = 3;
+const int DELIVERY_DAYS = 3;
+
+Main();
 
 static string ValidateStringInput( string prompt, string fieldName )
 {
@@ -88,94 +90,61 @@ static bool IsCorrectOrder( string productName, uint productAmount, string userN
 
 static DateTime GetDeliveryDate()
 {
-    return DateTime.Today.AddDays( deliveryDays );
+    return DateTime.Today.AddDays( DELIVERY_DAYS );
 }
 
 static void WriteOrder( string productName, uint productAmount, string userName, string deliveryAddress,
     DateTime deliveryDate )
 {
-    Console.WriteLine( $"\n{userName}, your order for {productAmount} unit(s) of \"{productName}\" has been placed!" );
-    Console.WriteLine( $"Expect delivery to: {deliveryAddress} by {deliveryDate:dd.MM.yyyy}" );
-    Console.WriteLine();
+    Console.WriteLine( $"""
+                        {userName}, your order for {productAmount} unit(s) of "{productName}" has been placed!
+                        Expect delivery to: {deliveryAddress} by {deliveryDate:dd.MM.yyyy}
+
+                        """ );
 }
 
 static void StartPlaceAnOrder()
 {
-    try
-    {
-        Console.WriteLine();
-        string productName = GetProductName();
-        uint productAmount = GetProductAmount( productName );
-        string userName = GetUserName();
-        string deliveryAddress = GetDeliveryAddress();
+    Console.WriteLine();
+    string productName = GetProductName();
+    uint productAmount = GetProductAmount( productName );
+    string userName = GetUserName();
+    string deliveryAddress = GetDeliveryAddress();
 
-        if ( IsCorrectOrder( productName, productAmount, userName, deliveryAddress ) )
-        {
-            DateTime deliveryDate = GetDeliveryDate();
-            WriteOrder( productName, productAmount, userName, deliveryAddress, deliveryDate );
-        }
-        else
-        {
-            Console.WriteLine( "\nOrder canceled. Returning to the main menu.\n" );
-        }
-    }
-    catch ( Exception ex )
+    if ( IsCorrectOrder( productName, productAmount, userName, deliveryAddress ) )
     {
-        Console.WriteLine( $"\nOrder creation failed: {ex.Message}" );
-        throw;
+        DateTime deliveryDate = GetDeliveryDate();
+        WriteOrder( productName, productAmount, userName, deliveryAddress, deliveryDate );
     }
-}
-
-static void HandleOperation( Operation operation )
-{
-    try
+    else
     {
-        switch ( operation )
-        {
-            case Operation.PlaceAnOrder:
-                StartPlaceAnOrder();
-                break;
-            case Operation.Exit:
-                break;
-            default:
-                throw new Exception( $"Invalid operation. Entered: {operation}." );
-        }
-    }
-    catch ( Exception ex )
-    {
-        Console.WriteLine( $"\nOrder processing error: {ex.Message}" );
-        throw;
+        Console.WriteLine( "\nOrder canceled. Returning to the main menu.\n" );
     }
 }
 
 static void Main()
 {
-    bool shouldExit = false;
+    Operation? operation;
 
-    while ( !shouldExit )
+    do
     {
         try
         {
             PrintMenu();
-            Operation? operation = ReadOperation();
+            operation = ReadOperation();
 
             switch ( operation )
             {
                 case Operation.PlaceAnOrder:
-                    HandleOperation( operation.Value );
+                    StartPlaceAnOrder();
                     break;
 
                 case Operation.Exit:
                     Console.WriteLine( "Goodbye!" );
-                    shouldExit = true;
-                    break;
-
-                case null:
-                    Console.WriteLine( "Invalid input. Please try again.\n" );
                     break;
 
                 default:
-                    Console.WriteLine( $"Unknown operation: {operation}. Please try again.\n" );
+                    Console.WriteLine( "Invalid input. Please try again.\n" );
                     break;
             }
         }
@@ -183,8 +152,7 @@ static void Main()
         {
             Console.WriteLine( $"\nError: {ex.Message}" );
             Console.WriteLine( "Please try again.\n" );
+            operation = null;
         }
-    }
+    } while ( operation != Operation.Exit );
 }
-
-Main();
