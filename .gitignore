@@ -1,0 +1,12 @@
+# JetBrains IDE
+.idea/
+*.sln.iml
+
+# .NET сборки
+bin/
+obj/
+*.user
+*.suo
+
+# macOS
+.DS_Store
