@@ -9,6 +9,6 @@ internal enum MainMenuOperation
 internal enum GameMenuOperation
 {
     Spin = 1,
-    CheckBalance = 2,
+    PrintBalance = 2,
     Exit = 3,
 }
