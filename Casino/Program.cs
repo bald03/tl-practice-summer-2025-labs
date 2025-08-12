@@ -81,7 +81,7 @@ class Program
         Console.Write( "Enter your choice: " );
         string? input = Console.ReadLine();
         if ( string.IsNullOrWhiteSpace( input ) ||
-             !Enum.TryParse( input, out MainMenuOperation operation ))
+             !Enum.TryParse( input, out MainMenuOperation operation ) )
         {
             return null;
         }
@@ -94,7 +94,7 @@ class Program
         Console.Write( "Enter your choice: " );
         string? input = Console.ReadLine();
         if ( string.IsNullOrWhiteSpace( input ) ||
-             !Enum.TryParse( input, out GameMenuOperation operation ))
+             !Enum.TryParse( input, out GameMenuOperation operation ) )
         {
             return null;
         }
