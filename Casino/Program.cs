@@ -13,7 +13,7 @@ class Program
     const decimal MULTIPLICATOR = 0.1m;
     static readonly Random random = new();
 
-    static void Main()
+    public static void Main()
     {
         PrintGameName( GameName );
 
@@ -37,7 +37,7 @@ class Program
         }
     }
 
-    static void PrintGameName( string gameName )
+    private static void PrintGameName( string gameName )
     {
         Console.WriteLine( gameName );
     }
@@ -57,7 +57,7 @@ class Program
         }
     }
 
-    static void PrintMainMenu()
+    private static void PrintMainMenu()
     {
         Console.WriteLine( """
                            🎰 Menu:
@@ -66,7 +66,7 @@ class Program
                            """ );
     }
 
-    static void PrintGameMenu()
+    private static void PrintGameMenu()
     {
         Console.WriteLine( """
                            Menu:
@@ -76,13 +76,12 @@ class Program
                            """ );
     }
 
-    static MainMenuOperation? ReadMainMenuOperation()
+    private static MainMenuOperation? ReadMainMenuOperation()
     {
         Console.Write( "Enter your choice: " );
         string? input = Console.ReadLine();
         if ( string.IsNullOrWhiteSpace( input ) ||
-             !Enum.TryParse( input, out MainMenuOperation operation ) ||
-             !Enum.IsDefined( typeof( MainMenuOperation ), operation ) )
+             !Enum.TryParse( input, out MainMenuOperation operation ))
         {
             return null;
         }
@@ -90,13 +89,12 @@ class Program
         return operation;
     }
 
-    static GameMenuOperation? ReadGameMenuOperation()
+    private static GameMenuOperation? ReadGameMenuOperation()
     {
         Console.Write( "Enter your choice: " );
         string? input = Console.ReadLine();
         if ( string.IsNullOrWhiteSpace( input ) ||
-             !Enum.TryParse( input, out GameMenuOperation operation ) ||
-             !Enum.IsDefined( typeof( GameMenuOperation ), operation ) )
+             !Enum.TryParse( input, out GameMenuOperation operation ))
         {
             return null;
         }
@@ -104,7 +102,7 @@ class Program
         return operation;
     }
 
-    static uint StartGame()
+    private static uint StartGame()
     {
         uint balance = GetBalance();
 
@@ -128,7 +126,7 @@ class Program
         }
     }
 
-    static uint HandleGameOperationAndUpdateBalance( GameMenuOperation operation, uint currentBalance )
+    private static uint HandleGameOperationAndUpdateBalance( GameMenuOperation operation, uint currentBalance )
     {
         switch ( operation )
         {
@@ -144,7 +142,7 @@ class Program
         }
     }
 
-    static uint Spin( uint balance )
+    private static uint Spin( uint balance )
     {
         uint bet = GetBet();
 
@@ -173,33 +171,33 @@ class Program
         return balance;
     }
 
-    static void PrintBalance( uint balance )
+    private static void PrintBalance( uint balance )
     {
         Console.WriteLine( $"Your current balance: {balance}" );
     }
 
-    static uint GetBalance()
+    private static uint GetBalance()
     {
         return ValidatePositiveNumberInput( "Enter your starting balance: " );
     }
 
-    static uint GetBet()
+    private static uint GetBet()
     {
         return ValidatePositiveNumberInput( "Enter your bet: " );
     }
 
-    static int GetRandomNumber()
+    private static int GetRandomNumber()
     {
         return random.Next( 1, 21 );
     }
 
-    static decimal CalculatePayout( uint bet, int randomNumber )
+    private static decimal CalculatePayout( uint bet, int randomNumber )
     {
         decimal winAmount = bet * ( 1 + ( MULTIPLICATOR * randomNumber % 17 ) );
         return Math.Round( winAmount, 2 );
     }
 
-    static void HandleMainMenuOperation( MainMenuOperation operation )
+    private static void HandleMainMenuOperation( MainMenuOperation operation )
     {
         switch ( operation )
         {
