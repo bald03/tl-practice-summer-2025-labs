@@ -1,0 +1,11 @@
+# JetBrains
+.idea/
+
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+
+# macOS
+.DS_Store
