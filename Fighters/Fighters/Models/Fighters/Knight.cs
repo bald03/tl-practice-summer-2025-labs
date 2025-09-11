@@ -14,7 +14,7 @@ namespace Fighters.Models.Fighters
 
         public string Name { get; private set; }
 
-        public Knight(string name, IRace race)
+        public Knight( string name, IRace race )
         {
             Name = name;
             _race = race;
@@ -30,20 +30,20 @@ namespace Fighters.Models.Fighters
 
         public int CalculateArmor() => _armor.Armor + _race.Armor;
 
-        public void SetArmor(IArmor armor)
+        public void SetArmor( IArmor armor )
         {
             _armor = armor;
         }
 
-        public void SetWeapon(IWeapon weapon)
+        public void SetWeapon( IWeapon weapon )
         {
             _weapon = weapon;
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage( int damage )
         {
             int newHealth = _currentHealth - damage;
-            if (newHealth < 0)
+            if ( newHealth < 0 )
             {
                 newHealth = 0;
             }

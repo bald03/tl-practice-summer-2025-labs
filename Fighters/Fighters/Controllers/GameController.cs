@@ -17,7 +17,7 @@ namespace Fighters.Controllers
         public GameController()
         {
             _gameManager = new GameManager();
-            
+
             _races = new Dictionary<string, IRace>
             {
                 { "0", new Human() },
@@ -43,14 +43,14 @@ namespace Fighters.Controllers
 
             _fighterClasses = new Dictionary<string, Type>
             {
-                { "0", typeof(Knight) },
-                { "1", typeof(Mercenary) }
+                { "0", typeof( Knight ) },
+                { "1", typeof( Mercenary ) }
             };
         }
 
-        public void ProcessCommand(string command)
+        public void ProcessCommand( string command )
         {
-            switch (command.ToLower().Trim())
+            switch ( command.ToLower().Trim() )
             {
                 case "add-fighter":
                     AddFighter();
@@ -60,11 +60,11 @@ namespace Fighters.Controllers
                     break;
                 case "reset":
                     _gameManager.ResetBattle();
-                    Console.WriteLine("Битва сброшена!");
+                    Console.WriteLine( "Битва сброшена!" );
                     break;
                 case "clear":
                     _gameManager.ClearFighters();
-                    Console.WriteLine("Все бойцы удалены!");
+                    Console.WriteLine( "Все бойцы удалены!" );
                     break;
                 case "list":
                     ListFighters();
@@ -73,116 +73,117 @@ namespace Fighters.Controllers
                     ShowHelp();
                     break;
                 default:
-                    Console.WriteLine("Неизвестная команда. Введите 'help' для справки.");
+                    Console.WriteLine( "Неизвестная команда. Введите 'help' для справки." );
                     break;
             }
         }
 
         private void AddFighter()
         {
-            Console.WriteLine("Введите имя персонажа:");
+            Console.WriteLine( "Введите имя персонажа:" );
             string name = Console.ReadLine()?.Trim();
-            
-            if (string.IsNullOrEmpty(name))
+
+            if ( string.IsNullOrEmpty( name ) )
             {
-                Console.WriteLine("Имя не может быть пустым!");
+                Console.WriteLine( "Имя не может быть пустым!" );
                 return;
             }
 
-            var fighterClass = SelectOption("Выберите класс персонажа:", _fighterClasses, 
-                new[] { "Рыцарь", "Наемник" });
+            var fighterClass = SelectOption( "Выберите класс персонажа:", _fighterClasses,
+                new[] { "Рыцарь", "Наемник" } );
 
-            if (fighterClass == null) return;
+            if ( fighterClass == null ) return;
 
 
-            var race = SelectOption("Выберите расу:", _races, 
-                new[] { "Человек", "Эльф", "Орк" });
-            if (race == null) return;
+            var race = SelectOption( "Выберите расу:", _races,
+                new[] { "Человек", "Эльф", "Орк" } );
+            if ( race == null ) return;
 
-            var weapon = SelectOption("Выберите оружие:", _weapons, 
-                new[] { "Без оружия", "Меч", "Топор", "Лук" });
-            if (weapon == null) return;
+            var weapon = SelectOption( "Выберите оружие:", _weapons,
+                new[] { "Без оружия", "Меч", "Топор", "Лук" } );
+            if ( weapon == null ) return;
 
-            var armor = SelectOption("Выберите броню:", _armors, 
-                new[] { "Без одежды", "Простая одежда", "Кожаная броня", "Кольчуга" });
-            if (armor == null) return;
+            var armor = SelectOption( "Выберите броню:", _armors,
+                new[] { "Без одежды", "Простая одежда", "Кожаная броня", "Кольчуга" } );
+            if ( armor == null ) return;
 
-            IFighter fighter = CreateFighter(fighterClass, name, race);
-            fighter.SetWeapon(weapon);
-            fighter.SetArmor(armor);
+            IFighter fighter = CreateFighter( fighterClass, name, race );
+            fighter.SetWeapon( weapon );
+            fighter.SetArmor( armor );
 
-            _gameManager.AddFighter(fighter);
-            Console.WriteLine($"Боец {name} добавлен!");
+            _gameManager.AddFighter( fighter );
+            Console.WriteLine( $"Боец {name} добавлен!" );
         }
 
-        private T SelectOption<T>(string prompt, Dictionary<string, T> options, string[] optionNames)
+        private T SelectOption<T>( string prompt, Dictionary<string, T> options, string[] optionNames )
         {
-            Console.WriteLine(prompt);
-            
-            for (int i = 0; i < optionNames.Length; i++)
+            Console.WriteLine( prompt );
+
+            for ( int i = 0; i < optionNames.Length; i++ )
             {
-                Console.WriteLine($"{i} - {optionNames[i]}");
+                Console.WriteLine( $"{i} - {optionNames[ i ]}" );
             }
 
             string input = Console.ReadLine()?.Trim();
-            
-            if (string.IsNullOrEmpty(input) || !options.ContainsKey(input))
+
+            if ( string.IsNullOrEmpty( input ) || !options.ContainsKey( input ) )
             {
-                Console.WriteLine("Неверный выбор!");
-                return default(T);
+                Console.WriteLine( "Неверный выбор!" );
+                return default( T );
             }
 
-            return options[input];
+            return options[ input ];
         }
 
-        private IFighter CreateFighter(Type fighterClass, string name, IRace race)
+        private IFighter CreateFighter( Type fighterClass, string name, IRace race )
         {
-            if (fighterClass == typeof(Knight))
+            if ( fighterClass == typeof( Knight ) )
             {
-                return new Knight(name, race);
+                return new Knight( name, race );
             }
-            else if (fighterClass == typeof(Mercenary))
+            else if ( fighterClass == typeof( Mercenary ) )
             {
-                return new Mercenary(name, race);
+                return new Mercenary( name, race );
             }
-            
-            throw new ArgumentException("Неизвестный класс бойца");
+
+            throw new ArgumentException( "Неизвестный класс бойца" );
         }
 
         private void ListFighters()
         {
             var fighters = _gameManager.GetFighters();
-            
-            if (fighters.Count == 0)
+
+            if ( fighters.Count == 0 )
             {
-                Console.WriteLine("Нет добавленных бойцов.");
+                Console.WriteLine( "Нет добавленных бойцов." );
                 return;
             }
 
-            Console.WriteLine("Список бойцов:");
-            for (int i = 0; i < fighters.Count; i++)
+            Console.WriteLine( "Список бойцов:" );
+            for ( int i = 0; i < fighters.Count; i++ )
             {
-                var fighter = fighters[i];
-                Console.WriteLine($"{i + 1}. {fighter.Name} - Здоровье: {fighter.GetCurrentHealth()}/{fighter.GetMaxHealth()}");
+                var fighter = fighters[ i ];
+                Console.WriteLine(
+                    $"{i + 1}. {fighter.Name} - Здоровье: {fighter.GetCurrentHealth()}/{fighter.GetMaxHealth()}" );
             }
         }
 
         private void ShowHelp()
         {
-            Console.WriteLine("Доступные команды:");
-            Console.WriteLine("add-fighter - Добавить нового бойца на арену");
-            Console.WriteLine("play - Начать битву");
-            Console.WriteLine("reset - Сбросить битву (восстановить здоровье)");
-            Console.WriteLine("clear - Удалить всех бойцов");
-            Console.WriteLine("list - Показать список бойцов");
-            Console.WriteLine("help - Показать эту справку");
-            Console.WriteLine("exit - Выйти из игры");
+            Console.WriteLine( "Доступные команды:" );
+            Console.WriteLine( "add-fighter - Добавить нового бойца на арену" );
+            Console.WriteLine( "play - Начать битву" );
+            Console.WriteLine( "reset - Сбросить битву (восстановить здоровье)" );
+            Console.WriteLine( "clear - Удалить всех бойцов" );
+            Console.WriteLine( "list - Показать список бойцов" );
+            Console.WriteLine( "help - Показать эту справку" );
+            Console.WriteLine( "exit - Выйти из игры" );
         }
 
         public void ShowWelcome()
         {
-            Console.WriteLine("Добро пожаловать в игру Fighter Game!");
-            Console.WriteLine("Введите команду:");
+            Console.WriteLine( "Добро пожаловать в игру Fighter Game!" );
+            Console.WriteLine( "Введите команду:" );
             ShowHelp();
         }
     }
