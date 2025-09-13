@@ -2,8 +2,8 @@
 {
     public interface IRace
     {
-        public int Damage { get; }
-        public int Health { get; }
-        public int Armor { get; }
+        int Damage { get; }
+        int Health { get; }
+        int Armor { get; }
     }
 }

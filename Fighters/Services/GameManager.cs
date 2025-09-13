@@ -18,12 +18,12 @@ namespace Fighters.Services
             _fighters.Add( fighter );
         }
 
-        public bool HasFighters()
+        private bool HasFighters()
         {
             return _fighters.Count > 0;
         }
 
-        public bool CanStartBattle()
+        private bool CanStartBattle()
         {
             return _fighters.Count >= 2;
         }
@@ -40,23 +40,23 @@ namespace Fighters.Services
             Console.WriteLine();
 
             int round = 1;
-            var aliveFighters = _fighters.ToList();
+            List<IFighter> aliveFighters = _fighters.ToList();
 
             while ( aliveFighters.Count > 1 )
             {
                 Console.WriteLine( $"Раунд {round}" );
 
                 // Рандомно сортирую бойцов по инициативе
-                var shuffledFighters = aliveFighters.OrderBy( x => _random.Next() ).ToList();
+                List<IFighter> shuffledFighters = aliveFighters.OrderBy( x => _random.Next() ).ToList();
 
                 for ( int i = 0; i < shuffledFighters.Count; i++ )
                 {
-                    var attacker = shuffledFighters[ i ];
+                    IFighter attacker = shuffledFighters[ i ];
 
                     if ( attacker.GetCurrentHealth() <= 0 )
                         continue;
 
-                    var target = FindTarget( attacker, shuffledFighters );
+                    IFighter target = FindTarget( attacker, shuffledFighters );
                     if ( target == null )
                         continue;
 
@@ -79,14 +79,14 @@ namespace Fighters.Services
 
             if ( aliveFighters.Count == 1 )
             {
-                var winner = aliveFighters[ 0 ];
+                IFighter winner = aliveFighters[ 0 ];
                 Console.WriteLine( $"{winner.Name} выжил и победил!" );
             }
         }
 
         private IFighter FindTarget( IFighter attacker, List<IFighter> fighters )
         {
-            var possibleTargets = fighters.Where( f => f != attacker && f.GetCurrentHealth() > 0 ).ToList();
+            List<IFighter> possibleTargets = fighters.Where( f => f != attacker && f.GetCurrentHealth() > 0 ).ToList();
             return possibleTargets.Count > 0 ? possibleTargets[ _random.Next( possibleTargets.Count ) ] : null;
         }
 
@@ -121,9 +121,9 @@ namespace Fighters.Services
 
         public void ResetBattle()
         {
-            var newFighters = new List<IFighter>();
+            List<IFighter> newFighters = new List<IFighter>();
 
-            foreach ( var fighter in _fighters )
+            foreach ( IFighter fighter in _fighters )
             {
                 IFighter newFighter = null;
 

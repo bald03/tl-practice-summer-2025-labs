@@ -8,18 +8,18 @@ namespace Fighters.Models.Fighters
     {
         string Name { get; }
 
-        public int GetCurrentHealth();
-        public int GetMaxHealth();
-        public int CalculateDamage();
-        public int CalculateArmor();
+        int GetCurrentHealth();
+        int GetMaxHealth();
+        int CalculateDamage();
+        int CalculateArmor();
 
-        public void SetArmor( IArmor armor );
-        public void SetWeapon( IWeapon weapon );
+        void SetArmor( IArmor armor );
+        void SetWeapon( IWeapon weapon );
 
-        public void TakeDamage( int damage );
+        void TakeDamage( int damage );
 
-        public IWeapon GetWeapon();
-        public IArmor GetArmor();
-        public IRace GetRace();
+        IWeapon GetWeapon();
+        IArmor GetArmor();
+        IRace GetRace();
     }
 }

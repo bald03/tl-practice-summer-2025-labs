@@ -1,3 +1,4 @@
+using Fighters.Models;
 using Fighters.Models.Armors;
 using Fighters.Models.Fighters;
 using Fighters.Models.Races;
@@ -12,7 +13,7 @@ namespace Fighters.Controllers
         private readonly Dictionary<string, IRace> _races;
         private readonly Dictionary<string, IWeapon> _weapons;
         private readonly Dictionary<string, IArmor> _armors;
-        private readonly Dictionary<string, Type> _fighterClasses;
+        private readonly Dictionary<string, FighterType> _fighterClasses;
 
         public GameController()
         {
@@ -41,10 +42,10 @@ namespace Fighters.Controllers
                 { "3", new ChainMail() }
             };
 
-            _fighterClasses = new Dictionary<string, Type>
+            _fighterClasses = new Dictionary<string, FighterType>
             {
-                { "0", typeof( Knight ) },
-                { "1", typeof( Mercenary ) }
+                { "0", FighterType.Knight },
+                { "1", FighterType.Mercenary }
             };
         }
 
@@ -89,25 +90,25 @@ namespace Fighters.Controllers
                 return;
             }
 
-            var fighterClass = SelectOption( "Выберите класс персонажа:", _fighterClasses,
+            FighterType? fighterClass = SelectEnumOption( "Выберите класс персонажа:", _fighterClasses,
                 new[] { "Рыцарь", "Наемник" } );
 
             if ( fighterClass == null ) return;
 
 
-            var race = SelectOption( "Выберите расу:", _races,
+            IRace race = SelectOption( "Выберите расу:", _races,
                 new[] { "Человек", "Эльф", "Орк" } );
             if ( race == null ) return;
 
-            var weapon = SelectOption( "Выберите оружие:", _weapons,
+            IWeapon weapon = SelectOption( "Выберите оружие:", _weapons,
                 new[] { "Без оружия", "Меч", "Топор", "Лук" } );
             if ( weapon == null ) return;
 
-            var armor = SelectOption( "Выберите броню:", _armors,
+            IArmor armor = SelectOption( "Выберите броню:", _armors,
                 new[] { "Без одежды", "Простая одежда", "Кожаная броня", "Кольчуга" } );
             if ( armor == null ) return;
 
-            IFighter fighter = CreateFighter( fighterClass, name, race );
+            IFighter fighter = CreateFighter( fighterClass.Value, name, race );
             fighter.SetWeapon( weapon );
             fighter.SetArmor( armor );
 
@@ -135,23 +136,39 @@ namespace Fighters.Controllers
             return options[ input ];
         }
 
-        private IFighter CreateFighter( Type fighterClass, string name, IRace race )
+        private T? SelectEnumOption<T>( string prompt, Dictionary<string, T> options, string[] optionNames ) where T : struct, Enum
         {
-            if ( fighterClass == typeof( Knight ) )
+            Console.WriteLine( prompt );
+
+            for ( int i = 0; i < optionNames.Length; i++ )
             {
-                return new Knight( name, race );
-            }
-            else if ( fighterClass == typeof( Mercenary ) )
-            {
-                return new Mercenary( name, race );
+                Console.WriteLine( $"{i} - {optionNames[ i ]}" );
             }
 
-            throw new ArgumentException( "Неизвестный класс бойца" );
+            string input = Console.ReadLine()?.Trim();
+
+            if ( string.IsNullOrEmpty( input ) || !options.ContainsKey( input ) )
+            {
+                Console.WriteLine( "Неверный выбор!" );
+                return null;
+            }
+
+            return options[ input ];
+        }
+
+        private IFighter CreateFighter( FighterType fighterClass, string name, IRace race )
+        {
+            return fighterClass switch
+            {
+                FighterType.Knight => new Knight( name, race ),
+                FighterType.Mercenary => new Mercenary( name, race ),
+                _ => throw new ArgumentException( "Неизвестный класс бойца" )
+            };
         }
 
         private void ListFighters()
         {
-            var fighters = _gameManager.GetFighters();
+            List<IFighter> fighters = _gameManager.GetFighters();
 
             if ( fighters.Count == 0 )
             {
@@ -162,7 +179,7 @@ namespace Fighters.Controllers
             Console.WriteLine( "Список бойцов:" );
             for ( int i = 0; i < fighters.Count; i++ )
             {
-                var fighter = fighters[ i ];
+                IFighter fighter = fighters[ i ];
                 Console.WriteLine(
                     $"{i + 1}. {fighter.Name} - Здоровье: {fighter.GetCurrentHealth()}/{fighter.GetMaxHealth()}" );
             }

@@ -6,7 +6,7 @@ namespace Fighters
     {
         public static void Main( string[] args )
         {
-            var controller = new GameController();
+            GameController controller = new GameController();
             controller.ShowWelcome();
 
             while ( true )
