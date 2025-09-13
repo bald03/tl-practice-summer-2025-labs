@@ -136,7 +136,8 @@ namespace Fighters.Controllers
             return options[ input ];
         }
 
-        private T? SelectEnumOption<T>( string prompt, Dictionary<string, T> options, string[] optionNames ) where T : struct, Enum
+        private T? SelectEnumOption<T>( string prompt, Dictionary<string, T> options, string[] optionNames )
+            where T : struct, Enum
         {
             Console.WriteLine( prompt );
 
