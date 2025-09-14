@@ -188,14 +188,16 @@ namespace Fighters.Controllers
 
         private void ShowHelp()
         {
-            Console.WriteLine( "Доступные команды:" );
-            Console.WriteLine( "add-fighter - Добавить нового бойца на арену" );
-            Console.WriteLine( "play - Начать битву" );
-            Console.WriteLine( "reset - Сбросить битву (восстановить здоровье)" );
-            Console.WriteLine( "clear - Удалить всех бойцов" );
-            Console.WriteLine( "list - Показать список бойцов" );
-            Console.WriteLine( "help - Показать эту справку" );
-            Console.WriteLine( "exit - Выйти из игры" );
+            Console.WriteLine( """
+                               Доступные команды:
+                               add-fighter - Добавить нового бойца на арену
+                               play - Начать битву
+                               reset - Сбросить битву (восстановить здоровье)
+                               clear - Удалить всех бойцов
+                               list - Показать список бойцов
+                               help - Показать эту справку
+                               exit - Выйти из игры
+                               """ );
         }
 
         public void ShowWelcome()
