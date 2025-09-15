@@ -40,4 +40,19 @@ public class Car
                $"{ToString()}\n" +
                $"================================";
     }
+
+    /// <summary>
+    /// Создает автомобиль из компонентов (Фабричный метод)
+    /// </summary>
+    /// <param name="brand">Брэнд автомобиля</param>
+    /// <param name="engine">Двигатель</param>
+    /// <param name="transmission">Коробка передач</param>
+    /// <param name="body">Кузов</param>
+    /// <param name="color">Цвет</param>
+    /// <returns>Новый экземпляр автомобиля</returns>
+    public static Car CreateFromParts( Brand brand, Engine engine, Transmission transmission, Body body,
+        CarColor color )
+    {
+        return new Car( brand, engine, transmission, body, color );
+    }
 }

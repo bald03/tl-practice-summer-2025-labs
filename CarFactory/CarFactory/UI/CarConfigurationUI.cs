@@ -1,16 +1,12 @@
 using CarFactory.Enums;
 using CarFactory.Models;
-using CarFactory.Services;
 
 namespace CarFactory.UI;
 
 public class CarConfigurationUI
 {
-    private readonly CarFactoryService _carFactoryService;
-
-    public CarConfigurationUI( CarFactoryService carFactoryService )
+    public CarConfigurationUI()
     {
-        _carFactoryService = carFactoryService;
     }
 
     public void Run()
@@ -95,7 +91,7 @@ public class CarConfigurationUI
             return;
         }
 
-        Car car = _carFactoryService.CreateCustomCar( brand, engine, transmission, body, color );
+        Car car = Car.CreateFromParts( brand, engine, transmission, body, color );
         Console.WriteLine( $"\n{car.GetConfiguration()}" );
     }
 
@@ -113,9 +109,9 @@ public class CarConfigurationUI
         string? choice = Console.ReadLine();
         Console.WriteLine();
 
-        if ( int.TryParse( choice, out int brandType ) && Enum.IsDefined( typeof( CarBrand ), brandType ) )
+        if ( Enum.TryParse<CarBrand>( choice, out CarBrand brandType ) )
         {
-            return ( ( CarBrand )brandType ) switch
+            return brandType switch
             {
                 CarBrand.BMW => Brand.BMW,
                 CarBrand.Ford => Brand.Ford,
@@ -141,9 +137,9 @@ public class CarConfigurationUI
         string? choice = Console.ReadLine();
         Console.WriteLine();
 
-        if ( int.TryParse( choice, out int engineType ) && Enum.IsDefined( typeof( EngineType ), engineType ) )
+        if ( Enum.TryParse<EngineType>( choice, out EngineType engineType ) )
         {
-            return ( ( EngineType )engineType ) switch
+            return engineType switch
             {
                 EngineType.Gasoline => new GasolineEngine(),
                 EngineType.Diesel => new DieselEngine(),
@@ -168,10 +164,9 @@ public class CarConfigurationUI
         string? choice = Console.ReadLine();
         Console.WriteLine();
 
-        if ( int.TryParse( choice, out int transmissionType ) &&
-             Enum.IsDefined( typeof( TransmissionType ), transmissionType ) )
+        if ( Enum.TryParse<TransmissionType>( choice, out TransmissionType transmissionType ) )
         {
-            return ( ( TransmissionType )transmissionType ) switch
+            return transmissionType switch
             {
                 TransmissionType.Manual => new ManualTransmission(),
                 TransmissionType.Automatic => new AutomaticTransmission(),
@@ -197,9 +192,9 @@ public class CarConfigurationUI
         string? choice = Console.ReadLine();
         Console.WriteLine();
 
-        if ( int.TryParse( choice, out int bodyType ) && Enum.IsDefined( typeof( BodyType ), bodyType ) )
+        if ( Enum.TryParse<BodyType>( choice, out BodyType bodyType ) )
         {
-            return ( ( BodyType )bodyType ) switch
+            return bodyType switch
             {
                 BodyType.Sedan => new SedanBody(),
                 BodyType.Hatchback => new HatchbackBody(),
@@ -228,9 +223,9 @@ public class CarConfigurationUI
         string? choice = Console.ReadLine();
         Console.WriteLine();
 
-        if ( int.TryParse( choice, out int colorType ) && Enum.IsDefined( typeof( CarColorType ), colorType ) )
+        if ( Enum.TryParse<CarColorType>( choice, out CarColorType colorType ) )
         {
-            return ( ( CarColorType )colorType ) switch
+            return colorType switch
             {
                 CarColorType.Black => CarColor.Black,
                 CarColorType.White => CarColor.White,
