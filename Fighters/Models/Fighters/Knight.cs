@@ -10,6 +10,7 @@ namespace Fighters.Models.Fighters
         private IArmor _armor = new NoArmor();
         private IWeapon _weapon = new Firsts();
 
+        private readonly int _maxHealth;
         private int _currentHealth;
 
         public string Name { get; private set; }
@@ -19,12 +20,13 @@ namespace Fighters.Models.Fighters
             Name = name;
             _race = race;
 
-            _currentHealth = GetMaxHealth();
+            _maxHealth = _race.Health + 20; // Баффнул рыцаря: +20 HP рыцаря
+            _currentHealth = _maxHealth;
         }
 
         public int GetCurrentHealth() => _currentHealth;
 
-        public int GetMaxHealth() => _race.Health + 20; // Баффнул рыцаря: +20 HP рыцаря
+        public int GetMaxHealth() => _maxHealth;
 
         public int CalculateDamage() => _weapon.Damage + _race.Damage;
 

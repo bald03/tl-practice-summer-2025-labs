@@ -84,13 +84,29 @@ namespace Fighters.Services
             }
         }
 
-        private IFighter FindTarget( IFighter attacker, List<IFighter> fighters )
+        private IFighter? FindTarget( IFighter attacker, List<IFighter> fighters )
         {
             List<IFighter> possibleTargets = fighters.Where( f => f != attacker && f.GetCurrentHealth() > 0 ).ToList();
             return possibleTargets.Count > 0 ? possibleTargets[ _random.Next( possibleTargets.Count ) ] : null;
         }
 
         private void PerformAttack( IFighter attacker, IFighter target )
+        {
+            bool isCritical;
+            int finalDamage = CalculateDamage( attacker, target, out isCritical );
+
+            if ( isCritical )
+            {
+                Console.WriteLine( $"{attacker.Name} наносит критический удар!" );
+            }
+
+            target.TakeDamage( finalDamage );
+
+            string damageInfo = isCritical ? $"критический урон {finalDamage}" : $"урон {finalDamage}";
+            Console.WriteLine( $"{attacker.Name} наносит {damageInfo}, {target.Name} получает {finalDamage}" );
+        }
+
+        private int CalculateDamage( IFighter attacker, IFighter target, out bool isCritical )
         {
             int baseDamage = attacker.CalculateDamage();
 
@@ -99,11 +115,10 @@ namespace Fighters.Services
             int modifiedDamage = ( int )( baseDamage * damageMultiplier );
 
             // Шанс крита (15%)
-            bool isCritical = _random.Next( 100 ) < 15;
+            isCritical = _random.Next( 100 ) < 15;
             if ( isCritical )
             {
                 modifiedDamage = ( int )( modifiedDamage * 1.5 );
-                Console.WriteLine( $"{attacker.Name} наносит критический удар!" );
             }
 
             int finalDamage = Math.Max( modifiedDamage - target.CalculateArmor(), 0 );
@@ -112,11 +127,7 @@ namespace Fighters.Services
                 finalDamage = 1;
             }
 
-            target.TakeDamage( finalDamage );
-
-            // Логирование
-            string damageInfo = isCritical ? $"критический урон {finalDamage}" : $"урон {finalDamage}";
-            Console.WriteLine( $"{attacker.Name} наносит {damageInfo}, {target.Name} получает {finalDamage}" );
+            return finalDamage;
         }
 
         public void ResetBattle()
@@ -125,7 +136,7 @@ namespace Fighters.Services
 
             foreach ( IFighter fighter in _fighters )
             {
-                IFighter newFighter = null;
+                IFighter? newFighter = null;
 
                 if ( fighter is Knight )
                 {

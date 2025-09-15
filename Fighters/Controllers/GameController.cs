@@ -82,7 +82,7 @@ namespace Fighters.Controllers
         private void AddFighter()
         {
             Console.WriteLine( "Введите имя персонажа:" );
-            string name = Console.ReadLine()?.Trim();
+            string? name = Console.ReadLine()?.Trim();
 
             if ( string.IsNullOrEmpty( name ) )
             {
@@ -96,15 +96,15 @@ namespace Fighters.Controllers
             if ( fighterClass == null ) return;
 
 
-            IRace race = SelectOption( "Выберите расу:", _races,
+            IRace? race = SelectOption( "Выберите расу:", _races,
                 new[] { "Человек", "Эльф", "Орк" } );
             if ( race == null ) return;
 
-            IWeapon weapon = SelectOption( "Выберите оружие:", _weapons,
+            IWeapon? weapon = SelectOption( "Выберите оружие:", _weapons,
                 new[] { "Без оружия", "Меч", "Топор", "Лук" } );
             if ( weapon == null ) return;
 
-            IArmor armor = SelectOption( "Выберите броню:", _armors,
+            IArmor? armor = SelectOption( "Выберите броню:", _armors,
                 new[] { "Без одежды", "Простая одежда", "Кожаная броня", "Кольчуга" } );
             if ( armor == null ) return;
 
@@ -116,7 +116,8 @@ namespace Fighters.Controllers
             Console.WriteLine( $"Боец {name} добавлен!" );
         }
 
-        private T SelectOption<T>( string prompt, Dictionary<string, T> options, string[] optionNames )
+        private T? SelectOption<T>( string prompt, Dictionary<string, T> options, string[] optionNames )
+            where T : class
         {
             Console.WriteLine( prompt );
 
@@ -125,12 +126,12 @@ namespace Fighters.Controllers
                 Console.WriteLine( $"{i} - {optionNames[ i ]}" );
             }
 
-            string input = Console.ReadLine()?.Trim();
+            string? input = Console.ReadLine()?.Trim();
 
             if ( string.IsNullOrEmpty( input ) || !options.ContainsKey( input ) )
             {
                 Console.WriteLine( "Неверный выбор!" );
-                return default( T );
+                return null;
             }
 
             return options[ input ];
@@ -146,7 +147,7 @@ namespace Fighters.Controllers
                 Console.WriteLine( $"{i} - {optionNames[ i ]}" );
             }
 
-            string input = Console.ReadLine()?.Trim();
+            string? input = Console.ReadLine()?.Trim();
 
             if ( string.IsNullOrEmpty( input ) || !options.ContainsKey( input ) )
             {

@@ -13,7 +13,7 @@ namespace Fighters
             {
                 Console.WriteLine();
                 Console.Write( "App: Введите команду:" );
-                string command = Console.ReadLine()?.Trim();
+                string? command = Console.ReadLine()?.Trim();
 
                 if ( string.IsNullOrEmpty( command ) )
                 {
